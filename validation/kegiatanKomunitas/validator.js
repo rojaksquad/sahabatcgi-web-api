@@ -1,11 +1,17 @@
 const { check } = require('express-validator');
 
 const create = [
-    check('name').isNumeric().withMessage('Name harus numeric').isLength({ min: 1 }).withMessage('Name tidak boleh kosong'),
-    // check('title').isLength({ min: 1 }).withMessage('Tidak boleh kosong').isLength({ max: 40 }).withMessage('Tidak boleh lebih dari 40 karakter')
-  ];
+    check('title').isString().withMessage('Title harus ber-tipe data String').isLength({ min: 1 }).withMessage('Title tidak boleh kosong').isLength({ max: 255 }).withMessage('Tidak boleh lebih dari 255 karakter'),
+    check('content').isString().withMessage('Content harus ber-tipe data String').isLength({ min: 1 }).withMessage('Content tidak boleh kosong'),
+    check('date').isLength({ min: 1 }).withMessage('Date tidak boleh kosong'),
+];
   
+const update = [
+    check('title').isString().withMessage('Title harus ber-tipe data String').isLength({ min: 1 }).withMessage('Title tidak boleh kosong').isLength({ max: 255 }).withMessage('Tidak boleh lebih dari 255 karakter'),
+    check('content').isString().withMessage('Content harus ber-tipe data String').isLength({ min: 1 }).withMessage('Content tidak boleh kosong'),
+    check('date').isLength({ min: 1 }).withMessage('Date tidak boleh kosong'),
+];
 
 module.exports = {
-    create
+    create, update
 };
