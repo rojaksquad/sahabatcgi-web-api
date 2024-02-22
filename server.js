@@ -8,6 +8,7 @@ const path = require('path');
 global.app = express();
 global.appDir = path.resolve(__dirname);
 global.Responser = require(appDir + '/lib/responser');
+global.db = require(appDir + '/models/index');
 
 // Request middleware
 app.use(function (req, res, next) {
@@ -24,15 +25,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(logger('dev'));
 app.use(cookieParser());
 
+// Serve image or static assets
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
 // API routes
 require(appDir+'/config/routes/index')();
 
 // Error handler middleware
 app.use(function(req, res, next) {
   res.status(404).json({
+    code: 404,
     status: 'error',
     messages: 'Not Found',
-    result: ''
+    result: {}
   })
 });
 

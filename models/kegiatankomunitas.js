@@ -4,7 +4,7 @@ const { Model } = require('sequelize');
 const sequelizePaginate = require('sequelize-paginate');
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class KegiatanKomunitas extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,16 +14,17 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  User.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+  KegiatanKomunitas.init({
+    title: DataTypes.STRING,
+    content: DataTypes.TEXT,
+    image_url: DataTypes.STRING,
+    date: DataTypes.DATE
   }, {
     sequelize,
-    modelName: 'User',
+    modelName: 'KegiatanKomunitas',
   });
 
-  sequelizePaginate.paginate(User);
+  sequelizePaginate.paginate(KegiatanKomunitas);
 
-  return User;
+  return KegiatanKomunitas;
 };
