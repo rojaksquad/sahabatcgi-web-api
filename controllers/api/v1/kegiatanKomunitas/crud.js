@@ -11,6 +11,7 @@ const create = async (req, res, callback) => {
             content: data.content,
             image_url: imagePath,
             date: data.date,
+            tempat: data.tempat
         });
 
         if (doc) {
@@ -101,6 +102,7 @@ const update = async (req, res, callback) => {
         if (data.content) doc.content = data.content;
         if (imagePath) doc.image_url = imagePath;
         if (data.date) doc.date = data.date;
+        if (data.tempat) doc.tempat = data.tempat;
 
         await doc.save();
 
