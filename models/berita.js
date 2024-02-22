@@ -1,10 +1,9 @@
 'use strict';
-
 const { Model } = require('sequelize');
 const sequelizePaginate = require('sequelize-paginate');
 
 module.exports = (sequelize, DataTypes) => {
-  class KegiatanKomunitas extends Model {
+  class Berita extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,18 +13,18 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  KegiatanKomunitas.init({
+  Berita.init({
     title: DataTypes.STRING,
     content: DataTypes.TEXT,
     image_url: DataTypes.STRING,
-    date: DataTypes.DATEONLY,
-    tempat: DataTypes.STRING,
+    kategori: DataTypes.ENUM('perkembanganKomunitas', 'perkembanganCML'),
+    doi_link: DataTypes.TEXT
   }, {
     sequelize,
-    modelName: 'KegiatanKomunitas',
+    modelName: 'Berita',
   });
 
-  sequelizePaginate.paginate(KegiatanKomunitas);
+  sequelizePaginate.paginate(Berita);
 
-  return KegiatanKomunitas;
+  return Berita;
 };

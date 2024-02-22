@@ -18,7 +18,7 @@ router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, 
         if(!error){
             Responser.success(res, "Create Kegiatan Komunitas Successfully", data, 201);
           }else{
-            Responser.error(res, "Error Get Kegiatan Komunitas by ID: " + error.message, error, 400);
+            Responser.error(res, "Error Creating Kegiatan Komunitas: " + error.message, error, 400);
         }
     })
 });
