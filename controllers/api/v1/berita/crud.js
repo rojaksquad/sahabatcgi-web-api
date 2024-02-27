@@ -156,14 +156,17 @@ const destroy = async (req, res, callback) => {
             throw error;
         }
 
-        // Delete the record image or static asset from server
-        const uniqueString = doc.image_url.split('\\').pop();
-        const imagePath = path.join(appDir, 'uploads', uniqueString);
 
-        if (fs.existsSync(imagePath)) {
-            fs.unlinkSync(imagePath);
+        if (doc.image_url) {
+            // Delete the record image or static asset from server
+            const uniqueString = doc.image_url.split('\\').pop();
+            const imagePath = path.join(appDir, 'uploads', uniqueString);
+
+            if (fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
         }
-
+        
         await doc.destroy();
 
         callback(doc, '');
