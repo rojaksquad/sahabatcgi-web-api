@@ -6,12 +6,11 @@ const create = async (req, res, callback) => {
         const data = req.body
         const imagePath = req.file ? req.file.path : null
 
-        const doc = await db.KegiatanKomunitas.create({
-            title: data.title,
-            content: data.content,
+        const doc = await db.MemberKomunitas.create({
+            full_name: data.full_name,
+            jabatan: data.jabatan,
             image_url: imagePath,
-            date: data.date,
-            tempat: data.tempat
+            quote: data.quote,
         });
 
         if (doc) {
@@ -42,7 +41,7 @@ const findAll = async (req, res, callback) => {
             order: [['id', 'desc']],
         };
 
-        const { docs, pages, total } = await db.KegiatanKomunitas.paginate(options);
+        const { docs, pages, total } = await db.MemberKomunitas.paginate(options);
 
         if (docs) {
             let result = {
@@ -67,7 +66,7 @@ const findOne = async (req, res, callback) => {
             where: { id: req.params.id }
         };
 
-        const doc = await db.KegiatanKomunitas.findOne(options);
+        const doc = await db.MemberKomunitas.findOne(options);
 
         if (doc) {
             let result = {
@@ -91,18 +90,17 @@ const update = async (req, res, callback) => {
         const data = req.body;
         const imagePath = req.file ? req.file.path : null;
 
-        const doc = await db.KegiatanKomunitas.findByPk(req.params.id);
+        const doc = await db.MemberKomunitas.findByPk(req.params.id);
 
         if (!doc) {
-            const error = new Error('Kegiatan Komunitas not found');
+            const error = new Error('Member Komunitas not found');
             throw error;
         }
 
-        if (data.title) doc.title = data.title;
-        if (data.content) doc.content = data.content;
+        if (data.full_name) doc.full_name = data.full_name;
+        if (data.jabatan) doc.jabatan = data.jabatan;
         if (imagePath) doc.image_url = imagePath;
-        if (data.date) doc.date = data.date;
-        if (data.tempat) doc.tempat = data.tempat;
+        if (data.quote) doc.quote = data.quote;
 
         await doc.save();
 
@@ -117,15 +115,15 @@ const destroy = async (req, res, callback) => {
     try {
         const id = req.params.id
 
-        const doc = await db.KegiatanKomunitas.findByPk(id);
+        const doc = await db.MemberKomunitas.findByPk(id);
 
         if (!doc) {
-            const error = new Error('Kegiatan Komunitas not found');
+            const error = new Error('Member Komunitas not found');
             throw error;
         }
 
         if (doc.image_url) {
-             // Delete the record image or static asset from server
+            // Delete the record image or static asset from server
             const uniqueString = doc.image_url.split('\\').pop();
             const imagePath = path.join(appDir, 'uploads', uniqueString);
 
@@ -133,7 +131,7 @@ const destroy = async (req, res, callback) => {
                 fs.unlinkSync(imagePath);
             }
         }
-
+        
         await doc.destroy();
 
         callback(doc, '');
