@@ -24,7 +24,11 @@ const create = async (req, res, callback) => {
             };
 
             callback(result, '');
+            return
         }
+
+        const error = new Error('Create Kegiatan Komunitas failed');
+        throw error;
     } catch (error) {
         console.log(error);
         callback('', error);
@@ -54,7 +58,11 @@ const findAll = async (req, res, callback) => {
             };
 
             callback(result, '');
+            return
         }
+
+        const error = new Error('There is no Kegiatan Komunitas data');
+        throw error;
     } catch (error) {
         console.log(error);
         callback('', error);
@@ -79,7 +87,11 @@ const findOne = async (req, res, callback) => {
             };
 
             callback(result, '');
+            return
         }
+
+        const error = new Error('Kegiatan Komunitas not found');
+        throw error;
     } catch (error) {
         console.log(error);
         callback('', error);
