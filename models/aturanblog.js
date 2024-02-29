@@ -14,7 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   AturanBlog.init({
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      validate: {
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Title must be a string');
+          }
+        },
+      },
+    },
     content: DataTypes.TEXT
   }, {
     sequelize,
