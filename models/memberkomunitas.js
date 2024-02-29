@@ -17,7 +17,16 @@ module.exports = (sequelize, DataTypes) => {
     full_name: DataTypes.STRING,
     jabatan: DataTypes.STRING,
     image_url: DataTypes.STRING,
-    quote: DataTypes.STRING
+    quote: {
+      type: DataTypes.STRING,
+      validate: {
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Quote must be a string');
+          }
+        },
+      },
+    },
   }, {
     sequelize,
     modelName: 'MemberKomunitas',
