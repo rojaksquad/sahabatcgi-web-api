@@ -1,7 +1,7 @@
 global.appDir = process.cwd();
 const db = require(appDir + '/models/index');
 
-describe('Unit Tests for Kegiatan Komunitas', () => {
+describe('Unit Tests for Berita', () => {
   describe('Query -- findAll', () => {
     it('should return all data with pagination information', async () => {
       const page = 1;
@@ -13,7 +13,7 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
           order: [['id', 'desc']],
       };
 
-      const { docs, pages, total } = await db.KegiatanKomunitas.paginate(options);
+      const { docs, pages, total } = await db.Berita.paginate(options);
 
       expect(docs).toBeDefined();
       expect(docs).not.toBeNull();
@@ -22,13 +22,12 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
         expect(doc).toHaveProperty('title');
         expect(doc).toHaveProperty('content');
         expect(doc).toHaveProperty('image_url');
-        expect(doc).toHaveProperty('date');
-        expect(doc).toHaveProperty('tempat');
+        expect(doc).toHaveProperty('kategori');
+        expect(doc).toHaveProperty('doi_link');
 
         expect(doc.title).not.toBeNull();
         expect(doc.content).not.toBeNull();
-        expect(doc.date).not.toBeNull();
-        expect(doc.tempat).not.toBeNull();
+        expect(doc.kategori).not.toBeNull();
       }
     });
   });
@@ -37,7 +36,7 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
     it('should return a single document with valid properties (+)', async () => {
       const existingDocumentId = 1;
 
-      const doc = await db.KegiatanKomunitas.findOne({
+      const doc = await db.Berita.findOne({
         where: { id: existingDocumentId }
       });
 
@@ -47,25 +46,82 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
       expect(doc).toHaveProperty('title');
       expect(doc).toHaveProperty('content');
       expect(doc).toHaveProperty('image_url');
-      expect(doc).toHaveProperty('date');
-      expect(doc).toHaveProperty('tempat');
+      expect(doc).toHaveProperty('kategori');
+      expect(doc).toHaveProperty('doi_link');
 
       expect(doc.id).toEqual(existingDocumentId);
 
       expect(doc.title).not.toBeNull();
       expect(doc.content).not.toBeNull();
-      expect(doc.date).not.toBeNull();
-      expect(doc.tempat).not.toBeNull();
+      expect(doc.kategori).not.toBeNull();
     });
 
     it('should return null for non-existing document (-)', async () => {
       const nonExistingDocumentId = 999;
 
-      const doc = await db.KegiatanKomunitas.findOne({
+      const doc = await db.Berita.findOne({
         where: { id: nonExistingDocumentId }
       });
 
       expect(doc).toBeNull();
+    });
+  });
+
+  describe('Query -- findMultiple', () => {
+    it('should return a multple documents with the same categories (+)', async () => {
+      const page = 1;
+      const per_page = 10;
+      const req_kategori = 'perkembanganKomunitas'
+
+      var options = {
+          where: {kategori: req_kategori},
+          page: page < 1 ? 1 : page,
+          paginate: per_page,
+          order: [['id', 'desc']],
+      };
+
+      const { docs, pages, total } = await db.Berita.paginate(options);
+
+      expect(docs).toBeDefined();
+      expect(docs).not.toBeNull();
+
+      for (const doc of docs) {
+        expect(doc).toHaveProperty('title');
+        expect(doc).toHaveProperty('content');
+        expect(doc).toHaveProperty('image_url');
+        expect(doc).toHaveProperty('kategori');
+        expect(doc).toHaveProperty('doi_link');
+
+        expect(doc.kategori).toEqual(req_kategori);
+
+        expect(doc.title).not.toBeNull();
+        expect(doc.content).not.toBeNull();
+        expect(doc.kategori).not.toBeNull();
+      }
+    });
+
+    it('should return error for documents with invalid categories (-)', async () => {
+      const page = 1;
+      const per_page = 10;
+      const req_kategori = 'invalid_category'
+
+      var options = {
+          where: {kategori: req_kategori},
+          page: page < 1 ? 1 : page,
+          paginate: per_page,
+          order: [['id', 'desc']],
+      };
+
+
+      let error;
+      try {
+        await db.Berita.paginate(options);
+      } catch (err) {
+        error = err;
+      }
+  
+      expect(error).toBeDefined();
+      expect(error).toBeInstanceOf(Error);
     });
   });
 
@@ -75,16 +131,16 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
         title: 'Sample Title',
         content: 'Sample Content',
         image_url: 'uploads/sample.jpg',
-        date: new Date().toISOString().split('T')[0],
-        tempat: 'Sample Location'
+        kategori: 'perkembanganCML',
+        doi_link: 'Sample DOI Link'
       };
 
-      const doc = await db.KegiatanKomunitas.create({
+      const doc = await db.Berita.create({
         title: data.title,
         content: data.content,
         image_url: data.image_url,
-        date: data.date,
-        tempat: data.tempat
+        kategori: data.kategori,
+        doi_link: data.doi_link
       });
 
       expect(doc).toBeDefined();
@@ -93,8 +149,8 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
       expect(doc.title).toEqual(data.title);
       expect(doc.content).toEqual(data.content);
       expect(doc.image_url).toEqual(data.image_url);
-      expect(doc.date).toEqual(data.date);
-      expect(doc.tempat).toEqual(data.tempat);
+      expect(doc.kategori).toEqual(data.kategori);
+      expect(doc.doi_link).toEqual(data.doi_link);
 
       await doc.destroy();
     });
@@ -104,18 +160,18 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
         title: 123,
         content: 123, 
         image_url: true,
-        date: 'Invalid Date', 
-        tempat: null 
+        kategori: 'Invalid Category', 
+        doi_link: null 
       };
   
       let error;
       try {
-        await db.KegiatanKomunitas.create({
+        await db.Berita.create({
           title: invalidData.title,
           content: invalidData.content,
           image_url: invalidData.image_url,
-          date: invalidData.date,
-          tempat: invalidData.tempat
+          kategori: invalidData.kategori,
+          doi_link: invalidData.doi_link
         });
       } catch (err) {
         error = err;
@@ -133,16 +189,16 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
         title: 'Sample Title',
         content: 'Sample Content',
         image_url: 'uploads/sample.jpg',
-        date: new Date().toISOString().split('T')[0],
-        tempat: 'Sample Location'
+        kategori: 'perkembanganCML',
+        doi_link: 'Sample DOI Link'
       };
   
-      const doc = await db.KegiatanKomunitas.create({
+      const doc = await db.Berita.create({
         title: data.title,
         content: data.content,
         image_url: data.image_url,
-        date: data.date,
-        tempat: data.tempat
+        kategori: data.kategori,
+        doi_link: data.doi_link
       });
   
       const updateData = {
@@ -171,7 +227,7 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
       };
   
       const nonExistentDocId = 99999;
-      const doc = await db.KegiatanKomunitas.findByPk(nonExistentDocId);
+      const doc = await db.Berita.findByPk(nonExistentDocId);
   
       let error;
       try {
@@ -196,11 +252,11 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
         title: 'Sample Title',
         content: 'Sample Content',
         image_url: 'uploads/sample.jpg',
-        date: new Date().toISOString().split('T')[0],
-        tempat: 'Sample Location'
+        kategori: 'perkembanganCML',
+        doi_link: 'Sample DOI Link'
       };
   
-      const doc = await db.KegiatanKomunitas.create({
+      const doc = await db.Berita.create({
         title: data.title,
         content: data.content,
         image_url: data.image_url,
@@ -210,7 +266,7 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
   
       await doc.destroy();
   
-      const deletedDoc = await db.KegiatanKomunitas.findByPk(doc.id);
+      const deletedDoc = await db.Berita.findByPk(doc.id);
   
       expect(deletedDoc).toBeNull();
     });
@@ -219,10 +275,10 @@ describe('Unit Tests for Kegiatan Komunitas', () => {
       const idToDelete = 9999;
   
       try {
-        await db.KegiatanKomunitas.destroy({ where: { id: idToDelete } });
+        await db.Berita.destroy({ where: { id: idToDelete } });
       } catch (error) {
         expect(error).toBeDefined();
-        expect(error.message).toContain('Kegiatan Komunitas not found');
+        expect(error.message).toContain('Berita not found');
       }
     });
   });
