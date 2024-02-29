@@ -6,7 +6,7 @@ const query = require('./crud');
 const { upload }  = require(appDir + '/lib/multer')
 const jwtAuth = require(appDir + '/middleware/jwtAuth');
 
-router.post('/', jwtAuth, upload.none(), Validator.create, async (req, res, next) => {
+router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -16,9 +16,9 @@ router.post('/', jwtAuth, upload.none(), Validator.create, async (req, res, next
 
     await query.create(req, res, (data, error) => {
         if(!error){
-            Responser.success(res, "Create Aturan Blog Successfully", data, 201);
+            Responser.success(res, "Create Profil Komunitas Successfully", data, 201);
           }else{
-            Responser.error(res, "Error Creating Aturan Blog: " + error.message, error, 400);
+            Responser.error(res, "Error Creating Profil Komunitas: " + error.message, error, 400);
         }
     })
 });
@@ -26,14 +26,14 @@ router.post('/', jwtAuth, upload.none(), Validator.create, async (req, res, next
 router.get('/', async (req, res, next) => {
     await query.findOne(req, res, (data, error) => {
         if(!error){
-            Responser.success(res, "Get Aturan Blog Successfully", data, 200);
+            Responser.success(res, "Get Profil Komunitas Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Get Aturan Blog: " + error.message, error, 400);
+            Responser.error(res, "Error Get Profil Komunitas: " + error.message, error, 400);
         }
     })
 });
 
-router.patch('/', jwtAuth, upload.none(), Validator.update, async (req, res, next) => {
+router.patch('/', jwtAuth, upload.single('image'), Validator.update, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -43,9 +43,9 @@ router.patch('/', jwtAuth, upload.none(), Validator.update, async (req, res, nex
 
     await query.update(req, res, (data, error) => {
         if(!error){
-            Responser.success(res, "Update Aturan Blog Successfully", data, 200);
+            Responser.success(res, "Update Profil Komunitas Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Update Aturan Blog: " + error.message, error, 400);
+            Responser.error(res, "Error Update Profil Komunitas: " + error.message, error, 400);
         }
     })
 });
@@ -53,9 +53,9 @@ router.patch('/', jwtAuth, upload.none(), Validator.update, async (req, res, nex
 router.delete('/', jwtAuth, async (req, res, next) => {
     await query.destroy(req, res, (data, error) => {
         if(!error){
-            Responser.success(res, "Delete Aturan Blog Successfully", data, 200);
+            Responser.success(res, "Delete Profil Komunitas Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Deleting Aturan Blog: " + error.message, error, 400);
+            Responser.error(res, "Error Deleting Profil Komunitas: " + error.message, error, 400);
         }
     })
 });
