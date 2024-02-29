@@ -6,6 +6,7 @@ var router = async function(){
     app.use(route+'/berita', require(route_path+'/berita/route'));
     app.use(route+'/memberKomunitas', require(route_path+'/memberKomunitas/route'));
     app.use(route+'/aturanBlog', require(route_path+'/aturanBlog/route'));
+    app.use(route+'/profilKomunitas', require(route_path+'/profilKomunitas/route'));
 
     app.use(route+'/admin', require(route_path+'/admin/route'));
   }
