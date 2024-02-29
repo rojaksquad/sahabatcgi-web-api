@@ -14,7 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ProfilKomunitas.init({
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      validate: {
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Title must be a string');
+          }
+        },
+      },
+    },
     content: DataTypes.TEXT,
     image_url: DataTypes.STRING,
     ig_link: DataTypes.STRING,
