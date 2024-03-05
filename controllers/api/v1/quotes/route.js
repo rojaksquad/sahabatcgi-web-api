@@ -27,7 +27,7 @@ router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, 
     })
 });
 
-router.post('/generate', jwtAuth, upload.single('image'), Validator.generate, async (req, res, next) => {
+router.post('/generate', jwtAuth, upload.none(), Validator.generate, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
