@@ -9,7 +9,6 @@ const { OpenAI } = require('openai');
 
 const openai = new OpenAI({ apiKey: process.env.API_KEY });
 
-
 router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, res, next) => {
     const errors = validationResult(req);
 

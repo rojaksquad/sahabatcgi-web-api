@@ -1,40 +1,94 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
+const Validator = require(appDir + '/validation/admin/validator');
+const query = require('./crud');
+const { upload }  = require(appDir + '/lib/multer')
+const jwtAuth = require(appDir + '/middleware/jwtAuth');
 
-router.post('/login', async (req, res, next) => {
-    const { email, password } = req.body;
+router.post('/login', upload.none(), Validator.login, async (req, res, next) => {
+    const errors = validationResult(req);
 
-    try {
-        let user = email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASS
-
-        if (!user) {
-            Responser.error(res, "Invalid login credentials", {}, 401);
-            return
-        }
-
-        user.id = 1
-        const payload = {
-            user: {
-                email: user.email,
-                id: user.id,
-            },
-        };
-
-        jwt.sign(
-            payload,
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' },
-            (err, token) => {
-                if (err) throw err;
-                Responser.success(res, "Login success", {token}, 200);
-            }
-        );
-    } catch (error) {
-        console.error(error.message);
-        Responser.error(res, "Server error when generating token", {}, 500);
+    if (!errors.isEmpty()) {
+        Responser.error(res, "Error Data Request", errors.array(), 400);
         return
     }
+
+    await query.login(req, res, (data, error) => {
+        if(!error){
+            Responser.success(res, "Login Success", data, 200);
+          }else{
+            Responser.error(res, "Error Login: " + error.message, error, 400);
+        }
+    })
+
+});
+
+router.post('/create', jwtAuth, upload.none(), Validator.create, async (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        Responser.error(res, "Error Data Request", errors.array(), 400);
+        return
+    }
+
+    await query.create(req, res, (data, error) => {
+        if(!error){
+            Responser.success(res, "Create New Admin Success", data, 200);
+          }else{
+            Responser.error(res, "Error Creating New Admin: " + error.message, error, 400);
+        }
+    })
+
+});
+
+
+router.get('/', jwtAuth, async (req, res, next) => {
+    await query.findAll(req, res, (data, error) => {
+        if(!error){
+            Responser.success(res, "Get All Admin Successfully", data, 200);
+          }else{
+            Responser.error(res, "Error Get All Admin: " + error.message, error, 400);
+        }
+    })
+});
+
+router.get('/:id', jwtAuth, async (req, res, next) => {
+    await query.findOne(req, res, (data, error) => {
+        if(!error){
+            Responser.success(res, "Get Admin by ID Successfully", data, 200);
+          }else{
+            Responser.error(res, "Error Get Admin by ID: " + error.message, error, 400);
+        }
+    })
+});
+
+router.patch('/:id', jwtAuth, upload.none(), Validator.update, async (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        Responser.error(res, "Error Data Request", errors.array(), 400);
+        return
+    }
+
+    await query.update(req, res, (data, error) => {
+        if(!error){
+            Responser.success(res, "Update Admin by ID Successfully", data, 200);
+          }else{
+            Responser.error(res, "Error Update Admin by ID: " + error.message, error, 400);
+        }
+    })
+});
+
+router.delete('/:id', jwtAuth, async (req, res, next) => {
+    await query.destroy(req, res, (data, error) => {
+        if(!error){
+            Responser.success(res, "Delete Admin by ID Successfully", data, 200);
+          }else{
+            Responser.error(res, "Error Deleting Admin by ID: " + error.message, error, 400);
+        }
+    })
 });
 
 module.exports = router
