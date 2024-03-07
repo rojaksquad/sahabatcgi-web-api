@@ -14,7 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Donasi.init({
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      validate: {
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Title must be a string');
+          }
+        },
+      },
+    },
     image_url: DataTypes.STRING,
     content: DataTypes.TEXT,
     donate_link: DataTypes.STRING
