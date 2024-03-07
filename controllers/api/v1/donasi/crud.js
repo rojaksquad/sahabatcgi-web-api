@@ -13,7 +13,7 @@ const create = async (req, res, callback) => {
                 title: data.title,
                 image_url: imagePath,
                 content: data.content,
-                donasi_link: data.donasi_link,
+                donate_link: data.donate_link,
             });
     
             if (doc) {

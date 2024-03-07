@@ -20,7 +20,16 @@ module.exports = (sequelize, DataTypes) => {
       unique: true // Make email attribute unique
     },
     password: DataTypes.STRING,
-    full_name: DataTypes.STRING,
+    full_name: {
+      type: DataTypes.STRING,
+      validate: {
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Full Name must be a string');
+          }
+        },
+      },
+    },
     is_active: DataTypes.BOOLEAN
   }, {
     sequelize,

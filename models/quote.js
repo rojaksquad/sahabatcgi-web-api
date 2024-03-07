@@ -15,7 +15,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Quote.init({
-    author_name: DataTypes.STRING,
+    author_name: {
+      type: DataTypes.STRING,
+      validate: {
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Author Name must be a string');
+          }
+        },
+      },
+    },
     image_url: DataTypes.STRING,
     quote: DataTypes.STRING,
   }, {
