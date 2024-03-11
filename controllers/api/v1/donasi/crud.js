@@ -79,7 +79,19 @@ const update = async (req, res, callback) => {
 
         if (data.title) doc.title = data.title;
         if (data.content) doc.content = data.content;
-        if (imagePath) doc.image_url = imagePath;
+        if (imagePath){
+            if (doc.image_url) {
+                // Delete the record image or static asset from server
+                const uniqueString = doc.image_url.split('\\').pop();
+                const imagePath = path.join(appDir, 'uploads', uniqueString);
+    
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                }
+            }
+
+            doc.image_url = imagePath;
+        } 
         if (data.donate_link) doc.donate_link = data.donate_link;
 
 

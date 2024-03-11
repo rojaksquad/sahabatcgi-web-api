@@ -14,6 +14,11 @@ router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, 
         return
     }
 
+    if (req.file === 'invalid_file_type') {
+        Responser.error(res, req.fileValidationError, {}, 400);
+        return;
+    }
+
     await query.create(req, res, (data, error) => {
         if(!error){
             Responser.success(res, "Create Member Komunitas Successfully", data, 201);
@@ -49,6 +54,11 @@ router.patch('/:id', jwtAuth, upload.single('image'), Validator.update, async (r
     if (!errors.isEmpty()) {
         Responser.error(res, "Error Data Request", errors.array(), 400);
         return
+    }
+
+    if (req.file === 'invalid_file_type') {
+        Responser.error(res, req.fileValidationError, {}, 400);
+        return;
     }
 
     await query.update(req, res, (data, error) => {
