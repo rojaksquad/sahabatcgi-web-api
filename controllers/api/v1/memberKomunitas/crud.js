@@ -111,7 +111,19 @@ const update = async (req, res, callback) => {
 
         if (data.full_name) doc.full_name = data.full_name;
         if (data.jabatan) doc.jabatan = data.jabatan;
-        if (imagePath) doc.image_url = imagePath;
+        if (imagePath){
+            if (doc.image_url) {
+                // Delete the record image or static asset from server
+                const uniqueString = doc.image_url.split('\\').pop();
+                const imagePath = path.join(appDir, 'uploads', uniqueString);
+    
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                }
+            }
+
+            doc.image_url = imagePath;
+        } 
         if (data.quote) doc.quote = data.quote;
 
         await doc.save();
