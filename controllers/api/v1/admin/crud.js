@@ -32,7 +32,7 @@ const login = async (req, res, callback) => {
 
         jwt.sign(
             payload,
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET_ADMIN,
             { expiresIn: '6h' },
             (err, token) => {
                 if (err) throw err;

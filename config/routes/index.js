@@ -9,6 +9,7 @@ var router = async function(){
     app.use(route+'/profilKomunitas', require(route_path+'/profilKomunitas/route'));
     app.use(route+'/quotes', require(route_path+'/quotes/route'));
     app.use(route+'/donasi', require(route_path+'/donasi/route'));
+    app.use(route+'/blog', require(route_path+'/blog/route'));
 
     app.use(route+'/admin', require(route_path+'/admin/route'));
   }
