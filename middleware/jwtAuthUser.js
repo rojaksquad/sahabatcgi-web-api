@@ -8,9 +8,9 @@ const jwtAuth = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET_ADMIN);
-        req.user = decoded.user;
-
+        const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET_USER);
+        req.userID = decoded.sub;
+        
         next();
     } catch (error) {
         return Responser.error(res, "Invalid token!", {}, 401);
