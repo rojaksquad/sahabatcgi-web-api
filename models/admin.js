@@ -1,20 +1,22 @@
 'use strict';
 const { Model } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 const sequelizePaginate = require('sequelize-paginate');
 
 module.exports = (sequelize, DataTypes) => {
   class Admin extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // Define associations here
     }
   }
 
   Admin.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      allowNull: false,
+      defaultValue: () => uuidv4(),
+    },
     email: {
       type: DataTypes.STRING,
       unique: true // Make email attribute unique
@@ -30,7 +32,8 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
     },
-    is_active: DataTypes.BOOLEAN
+    is_active: DataTypes.BOOLEAN,
+    superAdmin: DataTypes.BOOLEAN // New column
   }, {
     sequelize,
     modelName: 'Admin',
