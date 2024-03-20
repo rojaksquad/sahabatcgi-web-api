@@ -59,7 +59,7 @@ router.get('/:id', jwtAuth, async (req, res, next) => {
         if(!error){
             Responser.success(res, "Get Admin by ID Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Get Admin by ID: " + error.message, error, 400);
+            Responser.error(res, "Error Get Admin by ID: " + error.message, {}, 400);
         }
     })
 });
@@ -76,7 +76,7 @@ router.patch('/:id', jwtAuth, upload.none(), Validator.update, async (req, res, 
         if(!error){
             Responser.success(res, "Update Admin by ID Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Update Admin by ID: " + error.message, error, 400);
+            Responser.error(res, "Error Update Admin by ID: " + error.message, {}, 400);
         }
     })
 });
@@ -86,7 +86,7 @@ router.delete('/:id', jwtAuth, async (req, res, next) => {
         if(!error){
             Responser.success(res, "Delete Admin by ID Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Deleting Admin by ID: " + error.message, error, 400);
+            Responser.error(res, "Error Deleting Admin by ID: " + error.message, {}, 400);
         }
     })
 });

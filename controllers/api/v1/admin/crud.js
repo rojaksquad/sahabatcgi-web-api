@@ -10,7 +10,7 @@ const login = async (req, res, callback) => {
         const user = await db.Admin.findOne({ where: { email } });
 
         if (!user) {
-            const error = new Error('User not found');
+            const error = new Error('Admin not found');
             throw error;
         }
 
@@ -26,6 +26,7 @@ const login = async (req, res, callback) => {
                 email: user.email,
                 full_name: user.full_name,
                 is_active: user.is_active,
+                superAdmin: user.superAdmin
             }
         };
 
@@ -47,9 +48,15 @@ const login = async (req, res, callback) => {
     }
 }
 
-
 const create = async (req, res, callback) => {
     try {
+        const user = req.user;
+        
+        if (!user.superAdmin) {
+            const error = new Error('Unauthorized, Only superAdmin can create admins');
+            throw error;
+        }
+
         const data = req.body;
 
         const existingAdmin = await db.Admin.findOne({ where: { email: data.email } });
@@ -67,6 +74,7 @@ const create = async (req, res, callback) => {
             password: hashedPassword,
             full_name: data.full_name,
             is_active: true,
+            superAdmin: data.superAdmin
         });
 
         if (doc) {
@@ -76,6 +84,7 @@ const create = async (req, res, callback) => {
                     email: doc.email,
                     full_name: doc.full_name,
                     is_active: doc.is_active,
+                    superAdmin: doc.superAdmin,
                     createdAt: doc.createdAt,
                     updatedAt: doc.updatedAt
                 },
@@ -158,6 +167,9 @@ const findOne = async (req, res, callback) => {
         const error = new Error('Admin not found');
         throw error;
     } catch (error) {
+        if (error.message.includes('invalid input syntax for type uuid')) {
+            error.message = 'Admin not found';
+        }
         console.log(error);
         callback('', error);
     }
@@ -165,12 +177,31 @@ const findOne = async (req, res, callback) => {
 
 const update = async (req, res, callback) => {
     try {
+        const user = req.user; 
+
         const data = req.body;
 
         const doc = await db.Admin.findByPk(req.params.id);
 
         if (!doc) {
             const error = new Error('Admin not found');
+            throw error;
+        }
+
+        const isSuperAdmin = user.superAdmin;
+
+        if (isSuperAdmin && doc.superAdmin && doc.id !== user.id) {
+            const error = new Error('Unauthorized, Superadmins cannot update other superadmins');
+            throw error;
+        }
+
+        if (!isSuperAdmin && doc.id !== user.id) {
+            const error = new Error('Unauthorized, Non-superadmins can only update their own profile');
+            throw error;
+        }
+
+        if (doc.id === user.id && data.superAdmin !== undefined) {
+            const error = new Error('Unauthorized, Admin cannot change their own superAdmin status');
             throw error;
         }
 
@@ -184,8 +215,11 @@ const update = async (req, res, callback) => {
 
         if (data.email) doc.email = data.email;
         if (data.full_name) doc.full_name = data.full_name;
-        if (data.is_active) {
+        if (data.is_active !== undefined) {
             doc.is_active = data.is_active === 'true';
+        }
+        if (data.superAdmin !== undefined) {
+            doc.superAdmin = data.superAdmin === 'true';
         }
 
         await doc.save();
@@ -195,21 +229,24 @@ const update = async (req, res, callback) => {
             email: doc.email,
             full_name: doc.full_name,
             is_active: doc.is_active,
+            superAdmin: doc.superAdmin,
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt
         };
 
         callback(result, '');
     } catch (error) {
+        if (error.message.includes('invalid input syntax for type uuid')) {
+            error.message = 'Admin not found';
+        }
         console.log(error);
         callback('', error);
     }
 };
 
-
-
 const destroy = async (req, res, callback) => {
     try {
+        const userId = req.user.id;
         const id = req.params.id;
 
         const doc = await db.Admin.findByPk(id);
@@ -219,11 +256,21 @@ const destroy = async (req, res, callback) => {
             throw error;
         }
 
+        const isSuperAdmin = req.user.superAdmin;
+        const isDeletingSelf = userId === id;
+        const isDeletingNonSuperAdmin = isSuperAdmin && !doc.superAdmin;
+
+        if (!(isDeletingSelf || isDeletingNonSuperAdmin)) {
+            const error = new Error('Unauthorized: You do not have permission to delete this admin');
+            throw error;
+        }
+
         const result = {
             id: doc.id,
             email: doc.email,
             full_name: doc.full_name,
             is_active: doc.is_active,
+            superAdmin: doc.superAdmin,
             createdAt: doc.createdAt,
             updatedAt: doc.updatedAt
         };
@@ -232,10 +279,12 @@ const destroy = async (req, res, callback) => {
 
         callback(result, '');
     } catch (error) {
+        if (error.message.includes('invalid input syntax for type uuid')) {
+            error.message = 'Admin not found';
+        }
         console.log(error);
         callback('', error);
     }
 };
-
 
 module.exports = { login, findAll, findOne, create, update, destroy };
