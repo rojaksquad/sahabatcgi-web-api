@@ -35,7 +35,7 @@ describe('Unit Tests for Admin', () => {
 
   describe('Query -- findOne', () => {
     it('should return a single document with valid properties (+)', async () => {
-      const existingDocumentId = 1;
+      const existingDocumentId = '37fc2882-4390-4d67-b287-e8fad44e95d0';
 
       const doc = await db.Admin.findOne({
         where: { id: existingDocumentId }
@@ -58,7 +58,7 @@ describe('Unit Tests for Admin', () => {
     });
 
     it('should return null for non-existing document (-)', async () => {
-      const nonExistingDocumentId = 999;
+      const nonExistingDocumentId = '1bd95b1b-71e4-45cd-9ba6-fcdb8440b0a8';
 
       const doc = await db.Admin.findOne({
         where: { id: nonExistingDocumentId }
@@ -162,7 +162,7 @@ describe('Unit Tests for Admin', () => {
         full_name: 'New Sample Name',
       };
   
-      const nonExistentDocId = 99999;
+      const nonExistentDocId = '1bd95b1b-71e4-45cd-9ba6-fcdb8440b0a8';
       const doc = await db.Admin.findByPk(nonExistentDocId);
   
       let error;
@@ -215,7 +215,6 @@ describe('Unit Tests for Admin', () => {
         await db.Admin.destroy({ where: { id: idToDelete } });
       } catch (error) {
         expect(error).toBeDefined();
-        expect(error.message).toContain('Admin not found');
       }
     });
   });

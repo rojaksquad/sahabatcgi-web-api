@@ -43,7 +43,7 @@ router.get('/:id', async (req, res, next) => {
         if(!error){
             Responser.success(res, "Get Berita by ID Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Get Berita by ID: " + error.message, error, 400);
+            Responser.error(res, "Error Get Berita by ID: " + error.message, error.result || error, error.code || 400);
         }
     })
 });
@@ -75,7 +75,7 @@ router.patch('/:id', jwtAuth, upload.single('image'), Validator.update, async (r
         if(!error){
             Responser.success(res, "Update Berita by ID Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Update Berita by ID: " + error.message, error, 400);
+            Responser.error(res, "Error Update Berita by ID: " + error.message, error.result || error, error.code || 400);
         }
     })
 });

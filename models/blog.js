@@ -12,7 +12,16 @@ module.exports = (sequelize, DataTypes) => {
   Blog.init({
     author_id: DataTypes.STRING,
     author_name: DataTypes.STRING,
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      validate: {
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('Title must be a string');
+          }
+        },
+      },
+    },
     content: DataTypes.TEXT,
     isVerified: {
       type: DataTypes.BOOLEAN,

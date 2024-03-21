@@ -20,7 +20,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     user_name: {
       type: DataTypes.STRING,
-      allowNull: false // Not nullable
+      allowNull: false, // Not nullable
+      validate: {
+        isString(value) {
+          if (typeof value !== 'string') {
+            throw new Error('User Name must be a string');
+          }
+        },
+      }
     },
     content: DataTypes.TEXT
   }, {
