@@ -89,6 +89,8 @@ const findOne = async (req, res, callback) => {
         }
         
         const error = new Error('Quote not found');
+        error.code = 404;
+        error.result = {}
         throw error;
     } catch (error) {
         console.log(error);
@@ -105,6 +107,8 @@ const update = async (req, res, callback) => {
 
         if (!doc) {
             const error = new Error('Quote not found');
+            error.code = 404;
+            error.result = {}
             throw error;
         }
 
