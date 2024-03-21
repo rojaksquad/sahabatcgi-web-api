@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
+    "adm-zip": "^0.5.12",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.4",
