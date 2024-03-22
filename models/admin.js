@@ -17,9 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: () => uuidv4(),
     },
-    email: {
+    username: { // Changed from email to username
       type: DataTypes.STRING,
-      unique: true // Make email attribute unique
+      unique: true // Make username attribute unique
     },
     password: DataTypes.STRING,
     full_name: {
