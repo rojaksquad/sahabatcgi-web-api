@@ -20,12 +20,12 @@ describe('Unit Tests for Admin', () => {
       expect(docs).not.toBeNull();
 
       for (const doc of docs) {
-        expect(doc).toHaveProperty('email');
+        expect(doc).toHaveProperty('username');
         expect(doc).toHaveProperty('password');
         expect(doc).toHaveProperty('full_name');
         expect(doc).toHaveProperty('is_active');
 
-        expect(doc.email).not.toBeNull();
+        expect(doc.username).not.toBeNull();
         expect(doc.password).not.toBeNull();
         expect(doc.full_name).not.toBeNull();
         expect(doc.is_active).not.toBeNull();
@@ -35,7 +35,7 @@ describe('Unit Tests for Admin', () => {
 
   describe('Query -- findOne', () => {
     it('should return a single document with valid properties (+)', async () => {
-      const existingDocumentId = '37fc2882-4390-4d67-b287-e8fad44e95d0';
+      const existingDocumentId = '9d1d7d50-1be9-42b6-8769-eae7d827375e';
 
       const doc = await db.Admin.findOne({
         where: { id: existingDocumentId }
@@ -44,14 +44,14 @@ describe('Unit Tests for Admin', () => {
       expect(doc).toBeDefined();
       expect(doc).not.toBeNull();
 
-      expect(doc).toHaveProperty('email');
+      expect(doc).toHaveProperty('username');
       expect(doc).toHaveProperty('password');
       expect(doc).toHaveProperty('full_name');
       expect(doc).toHaveProperty('is_active');
 
       expect(doc.id).toEqual(existingDocumentId);
 
-      expect(doc.email).not.toBeNull();
+      expect(doc.username).not.toBeNull();
       expect(doc.password).not.toBeNull();
       expect(doc.full_name).not.toBeNull();
       expect(doc.is_active).not.toBeNull();
@@ -71,7 +71,7 @@ describe('Unit Tests for Admin', () => {
   describe('Query -- create', () => {
     it('should return the created document with valid properties (+)', async () => {
       const data = {
-        email: 'sample@email.com',
+        username: 'sampleusername',
         password: 'samplepassword',
         full_name: 'Sample Name',
       };
@@ -81,7 +81,7 @@ describe('Unit Tests for Admin', () => {
       const hashedPassword = bcrypt.hashSync(plainPassword, saltRounds);
 
       const doc = await db.Admin.create({
-        email: data.email,
+        username: data.username,
         password: hashedPassword,
         full_name: data.full_name,
         is_active: true,
@@ -90,7 +90,7 @@ describe('Unit Tests for Admin', () => {
       expect(doc).toBeDefined();
       expect(doc).not.toBeNull();
 
-      expect(doc.email).toEqual(data.email);
+      expect(doc.username).toEqual(data.username);
       expect(doc.full_name).toEqual(data.full_name);
 
       await doc.destroy();
@@ -98,7 +98,7 @@ describe('Unit Tests for Admin', () => {
 
     it('should return an error for invalid data (-)', async () => {
       const invalidData = {
-        email: 123,
+        username: 123,
         password: true, 
         full_name: 123,
       };
@@ -106,7 +106,7 @@ describe('Unit Tests for Admin', () => {
       let error;
       try {
         await db.Admin.create({
-          email: invalidData.email,
+          username: invalidData.username,
           password: invalidData.password,
           full_name: invalidData.full_name,
           is_active: true,
@@ -124,7 +124,7 @@ describe('Unit Tests for Admin', () => {
   describe('Query -- update', () => {
     it('should return the updated document with valid properties (+)', async () => {
       const data = {
-        email: 'sample@email.com',
+        username: 'sampleusername',
         password: 'samplepassword',
         full_name: 'Sample Name',
       };
@@ -134,7 +134,7 @@ describe('Unit Tests for Admin', () => {
       const hashedPassword = bcrypt.hashSync(plainPassword, saltRounds);
 
       const doc = await db.Admin.create({
-        email: data.email,
+        username: data.username,
         password: hashedPassword,
         full_name: data.full_name,
         is_active: true,
@@ -152,7 +152,7 @@ describe('Unit Tests for Admin', () => {
       expect(doc).not.toBeNull();
   
       expect(doc.full_name).toEqual(updateData.full_name);
-      expect(doc.email).toEqual(data.email); 
+      expect(doc.username).toEqual(data.username); 
   
       await doc.destroy();
     });
@@ -185,7 +185,7 @@ describe('Unit Tests for Admin', () => {
   describe('Query -- delete', () => {
     it('should delete the document from the database (+)', async () => {
       const data = {
-        email: 'sample@email.com',
+        username: 'sampleusername',
         password: 'samplepassword',
         full_name: 'Sample Name',
       };
@@ -195,7 +195,7 @@ describe('Unit Tests for Admin', () => {
       const hashedPassword = bcrypt.hashSync(plainPassword, saltRounds);
 
       const doc = await db.Admin.create({
-        email: data.email,
+        username: data.username,
         password: hashedPassword,
         full_name: data.full_name,
         is_active: true,

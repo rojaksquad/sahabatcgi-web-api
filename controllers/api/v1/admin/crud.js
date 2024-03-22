@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const login = async (req, res, callback) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
     try {
-        const user = await db.Admin.findOne({ where: { email } });
+        const user = await db.Admin.findOne({ where: { username } });
 
         if (!user) {
             const error = new Error('Admin not found');
@@ -23,7 +23,7 @@ const login = async (req, res, callback) => {
         const payload = {
             user: {
                 id: user.id,
-                email: user.email,
+                username: user.username,
                 full_name: user.full_name,
                 is_active: user.is_active,
                 superAdmin: user.superAdmin
@@ -59,9 +59,9 @@ const create = async (req, res, callback) => {
 
         const data = req.body;
 
-        const existingAdmin = await db.Admin.findOne({ where: { email: data.email } });
+        const existingAdmin = await db.Admin.findOne({ where: { username: data.username } });
         if (existingAdmin) {
-            const error = new Error('Email already exists');
+            const error = new Error('Username already exists');
             throw error;
         }
 
@@ -70,7 +70,7 @@ const create = async (req, res, callback) => {
         const hashedPassword = bcrypt.hashSync(plainPassword, saltRounds);
 
         const doc = await db.Admin.create({
-            email: data.email,
+            username: data.username,
             password: hashedPassword,
             full_name: data.full_name,
             is_active: true,
@@ -81,7 +81,7 @@ const create = async (req, res, callback) => {
             const result = {
                 data: {
                     id: doc.id,
-                    email: doc.email,
+                    username: doc.username,
                     full_name: doc.full_name,
                     is_active: doc.is_active,
                     superAdmin: doc.superAdmin,
@@ -205,15 +205,15 @@ const update = async (req, res, callback) => {
             throw error;
         }
 
-        if (data.email) {
-            const existingAdmin = await db.Admin.findOne({ where: { email: data.email } });
+        if (data.username) {
+            const existingAdmin = await db.Admin.findOne({ where: { username: data.username } });
             if (existingAdmin && existingAdmin.id !== doc.id) {
-                const error = new Error('Email already exists');
+                const error = new Error('Username already exists');
                 throw error;
             }
         }
 
-        if (data.email) doc.email = data.email;
+        if (data.username) doc.username = data.username;
         if (data.full_name) doc.full_name = data.full_name;
         if (data.is_active !== undefined) {
             doc.is_active = data.is_active === 'true';
@@ -226,7 +226,7 @@ const update = async (req, res, callback) => {
 
         const result = {
             id: doc.id,
-            email: doc.email,
+            username: doc.username,
             full_name: doc.full_name,
             is_active: doc.is_active,
             superAdmin: doc.superAdmin,
@@ -267,7 +267,7 @@ const destroy = async (req, res, callback) => {
 
         const result = {
             id: doc.id,
-            email: doc.email,
+            username: doc.username,
             full_name: doc.full_name,
             is_active: doc.is_active,
             superAdmin: doc.superAdmin,
