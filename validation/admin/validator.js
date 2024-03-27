@@ -4,12 +4,36 @@ const login = [
     check('username')
         .isString().withMessage('Username harus ber-tipe data String')
         .isLength({ min: 6, max: 16 }).withMessage('Username harus memiliki panjang antara 6 dan 16 karakter')
+        .custom(value => {
+            if (value.includes(' ')) {
+                throw new Error('Username tidak boleh mengandung spasi');
+            }
+            if (/[A-Z]/.test(value)) {
+                throw new Error('Username tidak boleh mengandung huruf kapital');
+            }
+            if (/[^a-zA-Z0-9_]/.test(value)) {
+                throw new Error('Username hanya boleh mengandung huruf kecil, angka, dan garis bawah (_)');
+            }
+            return true;
+        })
 ];
 
 const create = [
     check('username')
         .isString().withMessage('Username harus ber-tipe data String')
-        .isLength({ min: 6, max: 16 }).withMessage('Username harus memiliki panjang antara 6 dan 16 karakter'),
+        .isLength({ min: 6, max: 16 }).withMessage('Username harus memiliki panjang antara 6 dan 16 karakter')
+        .custom(value => {
+            if (value.includes(' ')) {
+                throw new Error('Username tidak boleh mengandung spasi');
+            }
+            if (/[A-Z]/.test(value)) {
+                throw new Error('Username tidak boleh mengandung huruf kapital');
+            }
+            if (/[^a-zA-Z0-9_]/.test(value)) {
+                throw new Error('Username hanya boleh mengandung huruf kecil, angka, dan garis bawah (_)');
+            }
+            return true;
+        }),
     check('full_name')
         .isString().withMessage('Full Name harus ber-tipe data String')
         .isLength({ min: 1 }).withMessage('Full Name tidak boleh kosong'),
@@ -26,7 +50,19 @@ const update = [
     check('username')
         .optional()
         .isString().withMessage('Username harus ber-tipe data String')
-        .isLength({ min: 6, max: 16 }).withMessage('Username harus memiliki panjang antara 6 dan 16 karakter'),
+        .isLength({ min: 6, max: 16 }).withMessage('Username harus memiliki panjang antara 6 dan 16 karakter')
+        .custom(value => {
+            if (value.includes(' ')) {
+                throw new Error('Username tidak boleh mengandung spasi');
+            }
+            if (/[A-Z]/.test(value)) {
+                throw new Error('Username tidak boleh mengandung huruf kapital');
+            }
+            if (/[^a-zA-Z0-9_]/.test(value)) {
+                throw new Error('Username hanya boleh mengandung huruf kecil, angka, dan garis bawah (_)');
+            }
+            return true;
+        }),
     check('full_name')
         .optional()
         .isString().withMessage('Full Name harus ber-tipe data String')
