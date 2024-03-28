@@ -4,15 +4,11 @@ const sequelizePaginate = require('sequelize-paginate');
 
 module.exports = (sequelize, DataTypes) => {
   class ProfilKomunitas extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      // Define associations here
     }
   }
+  
   ProfilKomunitas.init({
     title: {
       type: DataTypes.STRING,
@@ -28,7 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     image_url: DataTypes.STRING,
     ig_link: DataTypes.STRING,
     twitter_link: DataTypes.STRING,
-    fb_link: DataTypes.STRING
+    fb_link: DataTypes.STRING,
+    visi: DataTypes.TEXT,
+    misi: DataTypes.TEXT,
   }, {
     sequelize,
     modelName: 'ProfilKomunitas',

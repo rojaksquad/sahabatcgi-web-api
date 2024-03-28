@@ -12,6 +12,8 @@ const create = async (req, res, callback) => {
             const doc = await db.ProfilKomunitas.create({
                 title: data.title,
                 content: data.content,
+                visi: data.visi,
+                misi: data.misi,
                 image_url: imagePath,
                 ig_link: data.ig_link,
                 twitter_link: data.twitter_link,
@@ -81,6 +83,8 @@ const update = async (req, res, callback) => {
 
         if (data.title) doc.title = data.title;
         if (data.content) doc.content = data.content;
+        if (data.visi) doc.visi = data.visi;
+        if (data.misi) doc.misi = data.misi;
         if (imagePath){
             if (doc.image_url) {
                 // Delete the record image or static asset from server
