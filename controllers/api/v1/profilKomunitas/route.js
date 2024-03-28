@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { validationResult } = require('express-validator');
-const Validator = require(appDir + '/validation/aturanBlog/validator');
+const Validator = require(appDir + '/validation/profilKomunitas/validator');
 const query = require('./crud');
 const { upload }  = require(appDir + '/lib/multer')
 const jwtAuth = require(appDir + '/middleware/jwtAuth');
