@@ -108,6 +108,9 @@ const update = async (req, res, callback) => {
         const doc = await db.KegiatanKomunitas.findByPk(req.params.id);
 
         if (!doc) {
+            if (imagePath && fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
             const error = new Error('Kegiatan Komunitas not found');
             error.code = 404;
             error.result = {}

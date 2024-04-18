@@ -106,6 +106,9 @@ const update = async (req, res, callback) => {
         const doc = await db.Quote.findByPk(req.params.id);
 
         if (!doc) {
+            if (imagePath && fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
             const error = new Error('Quote not found');
             error.code = 404;
             error.result = {}

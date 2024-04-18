@@ -32,6 +32,9 @@ const create = async (req, res, callback) => {
             throw error;
         }
         
+        if (imagePath && fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+        }
         const error = new Error('Only one Info Donasi can exists at the same time');
         throw error;
     } catch (error) {
@@ -73,6 +76,9 @@ const update = async (req, res, callback) => {
         const doc = await db.Donasi.findOne();
 
         if (!doc) {
+            if (imagePath && fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
             const error = new Error('There is no Info Donasi data');
             throw error;
         }
