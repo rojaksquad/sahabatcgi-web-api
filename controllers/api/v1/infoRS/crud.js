@@ -3,15 +3,24 @@ const path = require('path');
 
 const create = async (req, res, callback) => {
     try {
-        const data = req.body
-        const imagePath = req.file ? req.file.path : null
+        const data = req.body;
+        const imagePath = req.file ? req.file.path : null;
 
-        const doc = await db.Berita.create({
-            title: data.title,
-            content: data.content,
+        const existingRecord = await db.InfoRS.findOne({ where: { nama_rs: data.nama_rs } });
+        if (existingRecord) {
+            if (imagePath && fs.existsSync(imagePath)) {
+                fs.unlinkSync(imagePath);
+            }
+            throw new Error('Rumah Sakit already exists');
+        }
+
+        const doc = await db.InfoRS.create({
+            nama_rs: data.nama_rs,
+            lokasi_rs: data.lokasi_rs,
             image_url: imagePath,
-            kategori: data.kategori,
-            doi_link: data.doi_link
+            link_maps: data.link_maps,
+            latlong: data.latlong,
+            info_kontak: data.info_kontak,
         });
 
         if (doc) {
@@ -24,16 +33,17 @@ const create = async (req, res, callback) => {
             };
 
             callback(result, '');
-            return
+            return;
         }
 
-        const error = new Error('Create Berita failed');
+        const error = new Error('Create Info RS failed');
         throw error;
     } catch (error) {
         console.log(error);
         callback('', error);
     }
-}
+};
+
 
 const findAll = async (req, res, callback) => {
     try {
@@ -46,7 +56,7 @@ const findAll = async (req, res, callback) => {
             order: [['id', 'desc']],
         };
 
-        const { docs, pages, total } = await db.Berita.paginate(options);
+        const { docs, pages, total } = await db.InfoRS.paginate(options);
 
         if (docs) {
             let result = {
@@ -61,7 +71,7 @@ const findAll = async (req, res, callback) => {
             return
         }
 
-        const error = new Error('There is no Berita data');
+        const error = new Error('There is no Info RS data');
         throw error;
     } catch (error) {
         console.log(error);
@@ -75,7 +85,7 @@ const findOne = async (req, res, callback) => {
             where: { id: req.params.id }
         };
 
-        const doc = await db.Berita.findOne(options);
+        const doc = await db.InfoRS.findOne(options);
 
         if (doc) {
             let result = {
@@ -89,46 +99,10 @@ const findOne = async (req, res, callback) => {
             callback(result, '');
             return
         }
-
-        const error = new Error('Berita not found');
+        
+        const error = new Error('Info RS not found');
         error.code = 404;
         error.result = {}
-        throw error;
-    } catch (error) {
-        console.log(error);
-        callback('', error);
-    }
-}
-
-const findMultiple = async (req, res, callback) => {
-    try {
-        const page = parseInt(req.query.page) || 1;
-        const per_page = parseInt(req.query.per_page) || 10;
-        const req_kategori = req.params.kategori
-
-        var options = {
-            where: {kategori: req_kategori},
-            page: page < 1 ? 1 : page,
-            paginate: per_page,
-            order: [['id', 'desc']],
-        };
-
-        const { docs, pages, total } = await db.Berita.paginate(options);
-
-        if (docs) {
-            let result = {
-                data: await docs,
-                currentPage: page,
-                nextPage: page >= pages ? false : page + 1,
-                totalItems: total,
-                totalPages: pages,
-            };
-
-            callback(result, '');
-            return
-        }
-
-        const error = new Error('Berita with ' + req_kategori + ' category was not found');
         throw error;
     } catch (error) {
         console.log(error);
@@ -141,35 +115,49 @@ const update = async (req, res, callback) => {
         const data = req.body;
         const imagePath = req.file ? req.file.path : null;
 
-        const doc = await db.Berita.findByPk(req.params.id);
+        const doc = await db.InfoRS.findByPk(req.params.id);
 
         if (!doc) {
             if (imagePath && fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath);
             }
-            const error = new Error('Berita not found');
+
+            const error = new Error('Info RS not found');
             error.code = 404;
-            error.result = {}
+            error.result = {};
             throw error;
         }
 
-        if (data.title) doc.title = data.title;
-        if (data.content) doc.content = data.content;
-        if (imagePath){
-            if (doc.image_url) {
-                // Delete the record image or static asset from server
-                const uniqueString = doc.image_url.split('\\').pop();
-                const imagePath = path.join(appDir, 'uploads', uniqueString);
-    
-                if (fs.existsSync(imagePath)) {
+        if (data.nama_rs && data.nama_rs !== doc.nama_rs) {
+            const existingRecordWithSameNamaRS = await db.InfoRS.findOne({ where: { nama_rs: data.nama_rs } });
+
+            if (existingRecordWithSameNamaRS) {
+                if (imagePath && fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
                 }
-            }
 
+                const error = new Error('Rumah Sakit already exists');
+                error.code = 400;
+                error.result = {};
+                throw error;
+            }
+        }
+
+        if (data.nama_rs) doc.nama_rs = data.nama_rs;
+        if (data.lokasi_rs) doc.lokasi_rs = data.lokasi_rs;
+        if (imagePath) {
+            if (doc.image_url) {
+                const uniqueString = doc.image_url.split('\\').pop();
+                const existingImagePath = path.join(appDir, 'uploads', uniqueString);
+                if (fs.existsSync(existingImagePath)) {
+                    fs.unlinkSync(existingImagePath);
+                }
+            }
             doc.image_url = imagePath;
-        } 
-        if (data.kategori) doc.kategori = data.kategori;
-        if (data.doi_link) doc.doi_link = data.doi_link;
+        }
+        if (data.link_maps) doc.link_maps = data.link_maps;
+        if (data.latlong) doc.latlong = data.latlong;
+        if (data.info_kontak) doc.info_kontak = data.info_kontak;
 
         await doc.save();
 
@@ -178,19 +166,18 @@ const update = async (req, res, callback) => {
         console.log(error);
         callback('', error);
     }
-}
+};
 
 const destroy = async (req, res, callback) => {
     try {
         const id = req.params.id
 
-        const doc = await db.Berita.findByPk(id);
+        const doc = await db.InfoRS.findByPk(id);
 
         if (!doc) {
-            const error = new Error('Berita not found');
+            const error = new Error('Info RS not found');
             throw error;
         }
-
 
         if (doc.image_url) {
             // Delete the record image or static asset from server
@@ -211,4 +198,4 @@ const destroy = async (req, res, callback) => {
     }
 }
 
-module.exports = { findAll, findOne, findMultiple, create, update, destroy };
+module.exports = { findAll, findOne, create, update, destroy };

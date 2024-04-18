@@ -11,6 +11,7 @@ var router = async function(){
     app.use(route+'/donasi', require(route_path+'/donasi/route'));
     app.use(route+'/blog', require(route_path+'/blog/route'));
     app.use(route+'/blogComment', require(route_path+'/blogComment/route'));
+    app.use(route+'/infoRS', require(route_path+'/infoRS/route'));
 
     app.use(route+'/admin', require(route_path+'/admin/route'));
   }
