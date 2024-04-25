@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator');
 const Validator = require(appDir + '/validation/infoRS/validator');
 const query = require('./crud');
 const { upload }  = require(appDir + '/lib/multer')
-const jwtAuth = require(appDir + '/middleware/jwtAuth');
+const jwtAuth = require(appDir + '/middleware/jwtAuthPengurus');
 
 router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, res, next) => {
     const errors = validationResult(req);
