@@ -14,12 +14,17 @@ global.db = require(appDir + '/models/index');
 
 // Request middleware
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'https://stirring-pixie-ed5c9b.netlify.app, https://dashboard-lgk.netlify.app');
+  const allowedOrigins = ['https://stirring-pixie-ed5c9b.netlify.app', 'https://dashboard-lgk.netlify.app'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Headers', "Origin, Content-Type, Accept, Authorization, X-Requested-With, Origin");
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE');
   next();
 });
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
