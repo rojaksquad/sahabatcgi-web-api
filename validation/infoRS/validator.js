@@ -7,14 +7,7 @@ const create = [
         .isLength({ max: 255 }).withMessage('Nama RS tidak boleh lebih dari 255 karakter'),
     check('lokasi_rs')
         .isString().withMessage('Lokasi RS harus ber-tipe data String')
-        .isLength({ min: 1 }).withMessage('Lokasi RS tidak boleh kosong')
-        .custom((value) => {
-            const pattern = /^[A-Za-z\s]+,\s[A-Za-z\s]+$/;
-            if (!pattern.test(value)) {
-                throw new Error('Format Lokasi RS tidak valid. Contoh format: "Jatiwaringin, Kota Bekasi"');
-            }
-            return true;
-        }),
+        .isLength({ min: 1 }).withMessage('Lokasi RS tidak boleh kosong'),
     check('link_maps')
         .isLength({ min: 1 }).withMessage('Link Maps tidak boleh kosong')
         .custom((value) => {
@@ -48,14 +41,7 @@ const update = [
     check('lokasi_rs')
         .optional()
         .isString().withMessage('Lokasi RS harus ber-tipe data String')
-        .isLength({ min: 1 }).withMessage('Lokasi RS tidak boleh kosong')
-        .custom((value) => {
-            const pattern = /^[A-Za-z\s]+,\s[A-Za-z\s]+$/;
-            if (!pattern.test(value)) {
-                throw new Error('Format Lokasi RS tidak valid. Contoh format: "Jatiwaringin, Kota Bekasi"');
-            }
-            return true;
-        }),
+        .isLength({ min: 1 }).withMessage('Lokasi RS tidak boleh kosong'),
     check('link_maps')
         .optional()
         .isString().withMessage('Link Maps harus ber-tipe data String')
