@@ -6,10 +6,11 @@ const query = require('./crud');
 const { upload }  = require(appDir + '/lib/multer')
 const jwtAuth = require(appDir + '/middleware/jwtAuth');
 const { OpenAI } = require('openai');
+const check_status = require(appDir + '/middleware/check_status');
 
 const openai = new OpenAI({ apiKey: process.env.API_KEY });
 
-router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, res, next) => {
+router.post('/', jwtAuth, check_status, upload.single('image'), Validator.create, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -31,7 +32,7 @@ router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, 
     })
 });
 
-router.post('/generate', jwtAuth, upload.none(), Validator.generate, async (req, res, next) => {
+router.post('/generate', jwtAuth, check_status, upload.none(), Validator.generate, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -75,7 +76,7 @@ router.get('/:id', async (req, res, next) => {
     })
 });
 
-router.patch('/:id', jwtAuth, upload.single('image'), Validator.update, async (req, res, next) => {
+router.patch('/:id', jwtAuth, check_status, upload.single('image'), Validator.update, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -97,7 +98,7 @@ router.patch('/:id', jwtAuth, upload.single('image'), Validator.update, async (r
     })
 });
 
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, check_status, async (req, res, next) => {
     await query.destroy(req, res, (data, error) => {
         if(!error){
             Responser.success(res, "Delete Quote by ID Successfully", data, 200);
