@@ -5,8 +5,9 @@ const Validator = require(appDir + '/validation/aturanBlog/validator');
 const query = require('./crud');
 const { upload }  = require(appDir + '/lib/multer')
 const jwtAuth = require(appDir + '/middleware/jwtAuth');
+const check_status = require(appDir + '/middleware/check_status');
 
-router.post('/', jwtAuth, upload.none(), Validator.create, async (req, res, next) => {
+router.post('/', jwtAuth, check_status, upload.none(), Validator.create, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -33,7 +34,7 @@ router.get('/', async (req, res, next) => {
     })
 });
 
-router.patch('/', jwtAuth, upload.none(), Validator.update, async (req, res, next) => {
+router.patch('/', jwtAuth, check_status, upload.none(), Validator.update, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -50,7 +51,7 @@ router.patch('/', jwtAuth, upload.none(), Validator.update, async (req, res, nex
     })
 });
 
-router.delete('/', jwtAuth, async (req, res, next) => {
+router.delete('/', jwtAuth, check_status, async (req, res, next) => {
     await query.destroy(req, res, (data, error) => {
         if(!error){
             Responser.success(res, "Delete Aturan Blog Successfully", data, 200);

@@ -6,6 +6,7 @@ const Validator = require(appDir + '/validation/admin/validator');
 const query = require('./crud');
 const { upload }  = require(appDir + '/lib/multer')
 const jwtAuth = require(appDir + '/middleware/jwtAuth');
+const check_status = require(appDir + '/middleware/check_status');
 
 router.post('/login', upload.none(), Validator.login, async (req, res, next) => {
     const errors = validationResult(req);
@@ -25,7 +26,7 @@ router.post('/login', upload.none(), Validator.login, async (req, res, next) => 
 
 });
 
-router.post('/create', jwtAuth, upload.none(), Validator.create, async (req, res, next) => {
+router.post('/create', jwtAuth, check_status, upload.none(), Validator.create, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -81,7 +82,7 @@ router.patch('/:id', jwtAuth, upload.none(), Validator.update, async (req, res, 
     })
 });
 
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, check_status, async (req, res, next) => {
     await query.destroy(req, res, (data, error) => {
         if(!error){
             Responser.success(res, "Delete Admin by ID Successfully", data, 200);

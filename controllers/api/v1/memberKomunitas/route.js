@@ -5,8 +5,9 @@ const Validator = require(appDir + '/validation/memberKomunitas/validator');
 const query = require('./crud');
 const { upload }  = require(appDir + '/lib/multer')
 const jwtAuth = require(appDir + '/middleware/jwtAuth');
+const check_status = require(appDir + '/middleware/check_status');
 
-router.post('/', jwtAuth, upload.single('image'), Validator.create, async (req, res, next) => {
+router.post('/', jwtAuth, check_status, upload.single('image'), Validator.create, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -48,7 +49,7 @@ router.get('/:id', async (req, res, next) => {
     })
 });
 
-router.patch('/:id', jwtAuth, upload.single('image'), Validator.update, async (req, res, next) => {
+router.patch('/:id', jwtAuth, check_status, upload.single('image'), Validator.update, async (req, res, next) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -70,7 +71,7 @@ router.patch('/:id', jwtAuth, upload.single('image'), Validator.update, async (r
     })
 });
 
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, check_status, async (req, res, next) => {
     await query.destroy(req, res, (data, error) => {
         if(!error){
             Responser.success(res, "Delete Member Komunitas by ID Successfully", data, 200);

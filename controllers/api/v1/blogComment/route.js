@@ -6,6 +6,7 @@ const query = require('./crud');
 const { upload }  = require(appDir + '/lib/multer')
 const jwtAuthUser = require(appDir + '/middleware/jwtAuthUser');
 const jwtAuth = require(appDir + '/middleware/jwtAuth');
+const check_status = require(appDir + '/middleware/check_status');
 
 router.post('/:blogID', jwtAuthUser, upload.none(), Validator.create, async (req, res, next) => {
     const errors = validationResult(req);
@@ -34,7 +35,7 @@ router.get('/:blogID', async (req, res, next) => {
     })
 });
 
-router.delete('/:id', jwtAuth, async (req, res, next) => {
+router.delete('/:id', jwtAuth, check_status, async (req, res, next) => {
     await query.destroy(req, res, (data, error) => {
         if(!error){
             Responser.success(res, "Delete Blog Comment by ID Successfully", data, 200);
