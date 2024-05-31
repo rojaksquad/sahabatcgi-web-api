@@ -42,9 +42,9 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     await query.findOne(req, res, (data, error) => {
         if(!error){
-            Responser.success(res, "Get Quote by ID Successfully", data, 200);
+            Responser.success(res, "Get Info RS by ID Successfully", data, 200);
           }else{
-            Responser.error(res, "Error Get Quote by ID: " + error.message, error.result || error, error.code || 400);
+            Responser.error(res, "Error Get Info RS by ID: " + error.message, error.result || error, error.code || 400);
         }
     })
 });
