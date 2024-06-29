@@ -110,7 +110,7 @@ const create = async (req, res, callback) => {
 const findAll = async (req, res, callback) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const per_page = parseInt(req.query.per_page) || 100000;
+        const per_page = parseInt(req.query.per_page) || 10000;
 
         var options = {
             page: page < 1 ? 1 : page,
