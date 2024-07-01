@@ -5,14 +5,15 @@ const create = async (req, res, callback) => {
     try {
         const data = req.body;
 
-        const existingRecord = await db.DataSpesialis.findOne({ where: { nama_spesialis: data.nama_spesialis } });
+        const existingRecord = await db.DataObat.findOne({ where: { nama_obat: data.nama_obat } });
         if (existingRecord) {
-            throw new Error('Data Spesialis already exists');
+            throw new Error('Data Obat already exists');
         }
 
-        const doc = await db.DataSpesialis.create({
-            nama_spesialis: data.nama_spesialis,
-            deskripsi: data.deskripsi,
+        const doc = await db.DataObat.create({
+            nama_obat: data.nama_obat,
+            list_dosis: data.list_dosis,
+            kategori: data.kategori,
         });
 
         if (doc) {
@@ -28,7 +29,7 @@ const create = async (req, res, callback) => {
             return;
         }
 
-        const error = new Error('Create Data Spesialis failed');
+        const error = new Error('Create Data Obat failed');
         throw error;
     } catch (error) {
         console.log(error);
@@ -48,7 +49,7 @@ const findAll = async (req, res, callback) => {
             order: [['id', 'desc']],
         };
 
-        const { docs, pages, total } = await db.DataSpesialis.paginate(options);
+        const { docs, pages, total } = await db.DataObat.paginate(options);
 
         if (docs) {
             let result = {
@@ -63,7 +64,7 @@ const findAll = async (req, res, callback) => {
             return
         }
 
-        const error = new Error('There is no Data Spesialis data');
+        const error = new Error('There is no Data Obat data');
         throw error;
     } catch (error) {
         console.log(error);
@@ -77,7 +78,7 @@ const findOne = async (req, res, callback) => {
             where: { id: req.params.id }
         };
 
-        const doc = await db.DataSpesialis.findOne(options);
+        const doc = await db.DataObat.findOne(options);
 
         if (doc) {
             let result = {
@@ -92,7 +93,7 @@ const findOne = async (req, res, callback) => {
             return
         }
         
-        const error = new Error('Data Spesialis not found');
+        const error = new Error('Data Obat not found');
         error.code = 404;
         error.result = {}
         throw error;
@@ -107,36 +108,38 @@ const update = async (req, res, callback) => {
         const data = req.body;
         const imagePath = req.file ? req.file.path : null;
 
-        const doc = await db.DataSpesialis.findByPk(req.params.id);
+        const doc = await db.DataObat.findByPk(req.params.id);
 
         if (!doc) {
             if (imagePath && fs.existsSync(imagePath)) {
                 fs.unlinkSync(imagePath);
             }
 
-            const error = new Error('Data Spesialis not found');
+            const error = new Error('Data Obat not found');
             error.code = 404;
             error.result = {};
             throw error;
         }
 
-        if (data.nama_spesialis && data.nama_spesialis !== doc.nama_spesialis) {
-            const existingRecordWithSameNamaRS = await db.DataSpesialis.findOne({ where: { nama_spesialis: data.nama_spesialis } });
+        if (data.nama_obat && data.nama_obat !== doc.nama_obat) {
+            const existingRecordWithSameNamaRS = await db.DataObat.findOne({ where: { nama_obat: data.nama_obat } });
 
             if (existingRecordWithSameNamaRS) {
                 if (imagePath && fs.existsSync(imagePath)) {
                     fs.unlinkSync(imagePath);
                 }
 
-                const error = new Error('Data Spesialis already exists');
+                const error = new Error('Data Obat already exists');
                 error.code = 400;
                 error.result = {};
                 throw error;
             }
         }
 
-        if (data.nama_spesialis) doc.nama_spesialis = data.nama_spesialis;
-        if (data.deskripsi) doc.deskripsi = data.deskripsi;
+        if (data.nama_obat) doc.nama_obat = data.nama_obat;
+        if (data.list_dosis) doc.list_dosis = data.list_dosis;
+        if (data.kategori) doc.kategori = data.kategori;
+
         if (imagePath) {
             if (doc.image_url) {
                 const uniqueString = doc.image_url.split('\\').pop();
@@ -161,10 +164,10 @@ const destroy = async (req, res, callback) => {
     try {
         const id = req.params.id
 
-        const doc = await db.DataSpesialis.findByPk(id);
+        const doc = await db.DataObat.findByPk(id);
 
         if (!doc) {
-            const error = new Error('Data Spesialis not found');
+            const error = new Error('Data Obat not found');
             throw error;
         }
 
