@@ -14,6 +14,7 @@ var router = async function(){
     app.use(route+'/infoRS', require(route_path+'/infoRS/route'));
     app.use(route+'/dataSpesialis', require(route_path+'/dataSpesialis/route'));
     app.use(route+'/dataObat', require(route_path+'/dataObat/route'));
+    app.use(route+'/location', require(route_path+'/location/route'));
 
     app.use(route+'/admin', require(route_path+'/admin/route'));
     app.use(route+'/pengurus', require(route_path+'/pengurus/route'));
