@@ -39,12 +39,18 @@ const findAll = async (req, res, callback) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const per_page = parseInt(req.query.per_page) || 100000;
+        const show = req.query.show;
 
         var options = {
             page: page < 1 ? 1 : page,
             paginate: per_page,
             order: [['id', 'desc']],
+            where: {}
         };
+
+        if (show !== undefined && ['true', 'false'].includes(show.toLowerCase())) {
+            options.where.show = show.toLowerCase() === 'true';
+        }
 
         const { docs, pages, total } = await db.Berita.paginate(options);
 
@@ -170,6 +176,9 @@ const update = async (req, res, callback) => {
         } 
         if (data.kategori) doc.kategori = data.kategori;
         if (data.doi_link) doc.doi_link = data.doi_link;
+        if (data.show !== undefined) {
+            doc.show = data.show === 'true';
+        }
 
         await doc.save();
 

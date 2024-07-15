@@ -18,7 +18,11 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.TEXT,
     image_url: DataTypes.STRING,
     kategori: DataTypes.ENUM('perkembanganKomunitas', 'perkembanganCML'),
-    doi_link: DataTypes.TEXT
+    doi_link: DataTypes.TEXT,
+    show: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true // Set a default value if needed
+    }
   }, {
     sequelize,
     modelName: 'Berita',

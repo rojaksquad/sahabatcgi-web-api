@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
     image_url: DataTypes.STRING,
     date: DataTypes.DATEONLY,
     tempat: DataTypes.STRING,
+    show: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true // Set a default value if needed
+    }
   }, {
     sequelize,
     modelName: 'KegiatanKomunitas',
