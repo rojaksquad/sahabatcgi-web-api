@@ -14,7 +14,7 @@ global.db = require(appDir + '/models/index');
 
 // Request middleware
 app.use(function (req, res, next) {
-  const allowedOrigins = ['https://elgekajabar.netlify.app', 'https://elgekajabar-admin.netlify.app', 'https://elgekajabar-pengurus.netlify.app'];
+  const allowedOrigins = ['https://sahabatcgi.netlify.app', 'https://sahabatcgi-admin.netlify.app', 'https://sahabatcgi-pengurus.netlify.app'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
