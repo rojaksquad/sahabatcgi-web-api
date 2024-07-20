@@ -21,6 +21,7 @@ const create = async (req, res, callback) => {
             link_maps: data.link_maps,
             latlong: data.latlong,
             info_kontak: data.info_kontak,
+            data_dokter: data.data_dokter,
         });
 
         if (doc) {
@@ -158,6 +159,7 @@ const update = async (req, res, callback) => {
         if (data.link_maps) doc.link_maps = data.link_maps;
         if (data.latlong) doc.latlong = data.latlong;
         if (data.info_kontak) doc.info_kontak = data.info_kontak;
+        if (data.data_dokter) doc.data_dokter = data.data_dokter;
 
         await doc.save();
 

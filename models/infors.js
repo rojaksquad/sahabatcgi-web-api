@@ -2,7 +2,6 @@
 const {
   Model
 } = require('sequelize');
-
 const sequelizePaginate = require('sequelize-paginate');
 
 module.exports = (sequelize, DataTypes) => {
@@ -32,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     image_url: DataTypes.STRING,
     link_maps: DataTypes.TEXT,
     latlong: DataTypes.TEXT,
-    info_kontak: DataTypes.STRING
+    info_kontak: DataTypes.STRING,
+    data_dokter: DataTypes.STRING 
   }, {
     sequelize,
     modelName: 'InfoRS',

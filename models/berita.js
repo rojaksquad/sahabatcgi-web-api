@@ -4,11 +4,6 @@ const sequelizePaginate = require('sequelize-paginate');
 
 module.exports = (sequelize, DataTypes) => {
   class Berita extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
       // define association here
     }
@@ -17,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     content: DataTypes.TEXT,
     image_url: DataTypes.STRING,
-    kategori: DataTypes.ENUM('perkembanganKomunitas', 'perkembanganCML'),
+    kategori: DataTypes.ENUM('perkembanganKomunitas', 'perkembanganCML', 'GIST'),
     doi_link: DataTypes.TEXT,
     show: {
       type: DataTypes.BOOLEAN,
