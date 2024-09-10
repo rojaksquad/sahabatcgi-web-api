@@ -14,6 +14,8 @@ const create = async (req, res, callback) => {
                 content: data.content,
                 visi: data.visi,
                 misi: data.misi,
+                email_komunitas: data.email_komunitas,
+                kontak_komunitas: data.kontak_komunitas,
                 image_url: imagePath,
                 ig_link: data.ig_link,
                 twitter_link: data.twitter_link,
@@ -91,6 +93,8 @@ const update = async (req, res, callback) => {
         if (data.content) doc.content = data.content;
         if (data.visi) doc.visi = data.visi;
         if (data.misi) doc.misi = data.misi;
+        if (data.email_komunitas) doc.email_komunitas = data.email_komunitas;
+        if (data.kontak_komunitas) doc.kontak_komunitas = data.kontak_komunitas;
         if (imagePath){
             if (doc.image_url) {
                 // Delete the record image or static asset from server

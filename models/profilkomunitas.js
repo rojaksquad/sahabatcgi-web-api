@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       // Define associations here
     }
   }
-  
+
   ProfilKomunitas.init({
     title: {
       type: DataTypes.STRING,
@@ -27,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     fb_link: DataTypes.STRING,
     visi: DataTypes.TEXT,
     misi: DataTypes.TEXT,
+    email_komunitas: DataTypes.STRING,
+    kontak_komunitas: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'ProfilKomunitas',
